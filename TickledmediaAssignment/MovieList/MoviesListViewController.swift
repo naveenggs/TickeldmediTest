@@ -14,12 +14,14 @@ class MoviesListViewController: UIViewController {
     @IBOutlet var collectionView: UICollectionView!
     
     @IBOutlet var barbtnRefresh: UIBarButtonItem!
-
+    
     @IBOutlet var barbtnFilter: UIBarButtonItem!
-
+    
+    @IBOutlet var searchBar: UISearchBar!
+    
     //#MARK: Variables
     private let refreshControl = UIRefreshControl()
-
+    
     var vWidth = Double()
     
     var vHeight = Double()
@@ -38,13 +40,17 @@ class MoviesListViewController: UIViewController {
         }
     }
     
+    var searchActive = Bool()
+    
+    var searchMoviesData = [MovieData]()
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
+        
         self.vWidth = Double(self.view.frame.size.width)
-
+        
         self.vHeight = Double(self.view.frame.size.height)
-
+        
         self.InitMainLayout()
     }
     
@@ -54,7 +60,7 @@ class MoviesListViewController: UIViewController {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         }
-
+        
         self.endpoint = .popular
         
         getMoviesList()
@@ -66,18 +72,21 @@ class MoviesListViewController: UIViewController {
         
         GenericHelper().removeAnimationfromCollectionview(self.collectionView)
         
-        collectionView.frame = CGRect.init(x: 0, y: self.topbarHeight, width: self.vWidth, height: vHeight - self.topbarHeight)
-
+        searchBar.frame = CGRect.init(x: 0, y: self.topbarHeight, width: self.vWidth, height: 44)
+        
+        let cvY = Double(searchBar.frame.size.height + searchBar.frame.origin.y)
+        
+        collectionView.frame = CGRect.init(x: 0, y: cvY, width: self.vWidth, height: vHeight - cvY)
+        
         collectionView.register(UINib(nibName: "MovieCVCell", bundle: nil), forCellWithReuseIdentifier: "MovieCVCell")
-                      
+        
         self.refreshControl.addTarget(self, action: #selector(refreshWeatherData(_:)), for: .valueChanged)
-
+        
         collectionView.refreshControl = refreshControl
-
+        
     }
     
     @objc private func refreshWeatherData(_ sender: Any) {
-        // Fetch Weather Data
         
         self.getMoviesList()
     }
@@ -86,45 +95,45 @@ class MoviesListViewController: UIViewController {
     private func getMoviesList() {
         
         GenericHelper().uiActivityIndicatorShow(self.view)
-
+        
         if ConnectivityHelper().isInternetAvailable() {
-
+            
             movieService.fetchMovies(from: self.endpoint!, params: nil, successHandler: {
-            
-            [unowned self] (response) in
-            
-            GenericHelper().uiActivityIndicatorHide(self.view)
                 
-            self.movies = response.results
-                            
+                [unowned self] (response) in
+                
+                GenericHelper().uiActivityIndicatorHide(self.view)
+                
+                self.movies = response.results
+                
                 self.refreshControl.endRefreshing()
-
-            })
-        {
-            [unowned self] (error) in
-           
-            self.refreshControl.endRefreshing()
-
-         GenericHelper().uiActivityIndicatorHide(self.view)
-         GenericHelper().showVCAlert("Server Error", error.localizedDescription, self)
+                
+                })
+            {
+                [unowned self] (error) in
+                
+                self.refreshControl.endRefreshing()
+                
+                GenericHelper().uiActivityIndicatorHide(self.view)
+                GenericHelper().showVCAlert("Server Error", error.localizedDescription, self)
+                
+            }
             
-        }
-            
-      }else{
+        }else{
             
             GenericHelper().showVCAlert("Internet Not Available !", "", self)
-
-       }
+            
+        }
     }
     
     
     //MARK:Next page
     func getNextPagemoviesList() {
-                
+        
         movieService.fetchnextpageMovies(from: self.endpoint!, pageNum: self.pagenumber, params: nil, successHandler: {
-              
-              [unowned self] (response) in
-              
+            
+            [unowned self] (response) in
+            
             GenericHelper().uiActivityIndicatorHide(self.view)
             
             for G in 0..<response.results.count{
@@ -134,14 +143,14 @@ class MoviesListViewController: UIViewController {
                 
             }
             
-              })
-          {
-              [unowned self] (error) in
-             
-           GenericHelper().uiActivityIndicatorHide(self.view)
-           GenericHelper().showVCAlert("Server Error", error.localizedDescription, self)
-              
-          }
+            })
+        {
+            [unowned self] (error) in
+            
+            GenericHelper().uiActivityIndicatorHide(self.view)
+            GenericHelper().showVCAlert("Server Error", error.localizedDescription, self)
+            
+        }
         
     }
     
@@ -157,54 +166,54 @@ class MoviesListViewController: UIViewController {
     }
     
     //MARK: Show Filter Slection Popup
-     
-     func showFilterOptions() {
-         
-         let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+    
+    func showFilterOptions() {
         
-         let upcomingAction: UIAlertAction = UIAlertAction(title: "Upcoming", style: .default) { action -> Void in
-             
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let upcomingAction: UIAlertAction = UIAlertAction(title: "Upcoming", style: .default) { action -> Void in
+            
             self.endpoint = .upcoming
             
             self.getMoviesList()
             
-         }
-         
-         let popularAction: UIAlertAction = UIAlertAction(title: "Popular", style: .default) { action -> Void in
-             
-           self.endpoint = .popular
-
+        }
+        
+        let popularAction: UIAlertAction = UIAlertAction(title: "Popular", style: .default) { action -> Void in
+            
+            self.endpoint = .popular
+            
             self.getMoviesList()
-
-         }
+            
+        }
         
         let topratedAction: UIAlertAction = UIAlertAction(title: "Top Rated", style: .default) { action -> Void in
-                    
-           self.endpoint = .topRated
-
+            
+            self.endpoint = .topRated
+            
             self.getMoviesList()
-
+            
         }
         
         let nowplayingAction: UIAlertAction = UIAlertAction(title: "Now Playing", style: .default) { action -> Void in
-                    
+            
             self.endpoint = .nowPlaying
-
+            
             self.getMoviesList()
-
+            
         }
-         
-         let cancelAction: UIAlertAction = UIAlertAction(title: "Close", style: .cancel) { action -> Void in }
-         
-         actionSheetController.addAction(upcomingAction)
-         actionSheetController.addAction(popularAction)
-         actionSheetController.addAction(topratedAction)
-         actionSheetController.addAction(nowplayingAction)
-         actionSheetController.addAction(cancelAction)
-
-         present(actionSheetController, animated: true, completion: nil)
-         
-     }
+        
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Close", style: .cancel) { action -> Void in }
+        
+        actionSheetController.addAction(upcomingAction)
+        actionSheetController.addAction(popularAction)
+        actionSheetController.addAction(topratedAction)
+        actionSheetController.addAction(nowplayingAction)
+        actionSheetController.addAction(cancelAction)
+        
+        present(actionSheetController, animated: true, completion: nil)
+        
+    }
     /*
      // MARK: - Navigation
      
@@ -220,18 +229,44 @@ class MoviesListViewController: UIViewController {
 //#MARK: Collectionview Delegate and Datasource Methods
 extension MoviesListViewController: UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        
+        return 1
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return movies.count
+        var final = Int()
+        
+        if self.searchActive{
+            
+            final = self.searchMoviesData.count
+            
+        }else{
+            final = self.movies.count
+            
+        }
+        
+        return final
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieCVCell", for: indexPath) as! MovieCVCell
         
-        let movie = movies[indexPath.item]
-        
-        cell.configure(movie)
+        if self.searchActive{
+            
+            let movie = searchMoviesData[indexPath.item]
+            
+            cell.configure(movie)
+            
+        }else{
+            
+            let movie = movies[indexPath.item]
+            
+            cell.configure(movie)
+            
+        }
         
         GenericHelper().applyLayerShadow(cell.viewBGM)
         
@@ -250,12 +285,16 @@ extension MoviesListViewController: UICollectionViewDelegate,UICollectionViewDat
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
-        if indexPath.item == movies.count - 1{
+        if self.searchActive == false{
             
-            self.pagenumber += 1
-                        
-            self.getNextPagemoviesList()
-
+            if indexPath.item == movies.count - 1{
+                
+                self.pagenumber += 1
+                
+                self.getNextPagemoviesList()
+                
+            }
+            
         }
         
     }
@@ -265,6 +304,119 @@ extension MoviesListViewController: UICollectionViewDelegate,UICollectionViewDat
         let cWidth = (collectionView.frame.size.width / 2) - 6
         
         return CGSize.init(width: cWidth, height: 200.0)
+    }
+    
+    
+}
+//#MARK: Search Bar Delegate Methods
+extension MoviesListViewController:UISearchBarDelegate{
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if searchText.count > 0 {
+            
+            self.searchActive = true
+            
+            let text = searchBar.text!.lowercased()
+            
+            GenericHelper().uiActivityIndicatorShow(self.view)
+            
+            if ConnectivityHelper().isInternetAvailable() {
+                
+                movieService.searchMovie(query: text, params: nil, successHandler: {[unowned self] (response) in
+                    
+                    if searchBar.text == text {
+                        
+                        GenericHelper().uiActivityIndicatorHide(self.view)
+                        
+                        self.searchMoviesData = response.results
+                        
+                        self.collectionView.reloadData()
+                        
+                    }
+                }) { [unowned self] (error) in
+                    
+                    GenericHelper().uiActivityIndicatorHide(self.view)
+                    
+                    GenericHelper().showVCAlert("Server Error", error.localizedDescription, self)
+                }
+            }
+            else{
+                
+                GenericHelper().showVCAlert("Internet Not Available !", "", self)
+                
+            }
+            
+        }else{
+            
+            self.searchActive = false
+            
+            self.collectionView?.reloadData()
+        }
+        
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        
+        self.searchActive = false
+        
+        self.collectionView?.reloadData()
+    }
+    
+    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        
+        return true
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        
+        
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        self.searchMoviesData.removeAll()
+        
+        let stext = searchBar.text!.lowercased()
+        
+        guard let text = searchBar.text, !text.isEmpty else {
+            return
+        }
+        
+        GenericHelper().uiActivityIndicatorShow(self.view)
+        
+        if ConnectivityHelper().isInternetAvailable() {
+            
+            movieService.searchMovie(query: text, params: nil, successHandler: {[unowned self] (response) in
+                //self.activityIndicator.stopAnimating()
+                
+                if searchBar.text == text {
+                    
+                    print("Done Saerch Data", response.results)
+                    
+                    GenericHelper().uiActivityIndicatorHide(self.view)
+                    
+                    self.searchMoviesData = response.results
+                    
+                    self.collectionView.reloadData()
+                    
+                }
+            }) { [unowned self] (error) in
+                
+                GenericHelper().uiActivityIndicatorHide(self.view)
+                
+                GenericHelper().showVCAlert("Server Error", error.localizedDescription, self)
+            }
+        }
+        else{
+            
+            GenericHelper().showVCAlert("Internet Not Available !", "", self)
+            
+        }
+        
+        self.view.endEditing(true)
+        
     }
     
     
@@ -281,28 +433,28 @@ extension MoviesListViewController: UISearchResultsUpdating {
         }
         
         GenericHelper().uiActivityIndicatorShow(self.view)
-
+        
         if ConnectivityHelper().isInternetAvailable() {
-                    
-        movieService.searchMovie(query: text, params: nil, successHandler: {[unowned self] (response) in
             
-            GenericHelper().uiActivityIndicatorHide(self.view)
-            
-            if searchController.searchBar.text == text {
-                self.movies = response.results
+            movieService.searchMovie(query: text, params: nil, successHandler: {[unowned self] (response) in
+                
+                GenericHelper().uiActivityIndicatorHide(self.view)
+                
+                if searchController.searchBar.text == text {
+                    self.movies = response.results
+                }
+                })
+            { [unowned self] (error) in
+                
+                GenericHelper().uiActivityIndicatorHide(self.view)
+                GenericHelper().showVCAlert("Server Error", error.localizedDescription, self)
+                
             }
-        })
-        { [unowned self] (error) in
-            
-            GenericHelper().uiActivityIndicatorHide(self.view)
-            GenericHelper().showVCAlert("Server Error", error.localizedDescription, self)
-       
-         }
         }
         else{
             
             GenericHelper().showVCAlert("Internet Not Available !", "", self)
-
+            
         }
         
     }
