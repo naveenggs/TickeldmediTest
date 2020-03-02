@@ -1,0 +1,6 @@
+framework module Pods_TickledmediaAssignment {
+  umbrella header "Pods-TickledmediaAssignment-umbrella.h"
+
+  export *
+  module * { export * }
+}

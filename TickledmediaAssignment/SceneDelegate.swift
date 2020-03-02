@@ -2,11 +2,12 @@
 //  SceneDelegate.swift
 //  TickledmediaAssignment
 //
-//  Created by Naveen Gundu on 01/03/20.
+//  Created by Naveen Gundu on 29/02/20.
 //  Copyright © 2020 NG. All rights reserved.
 //
 
 import UIKit
+@available(iOS 13.0, *)
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 

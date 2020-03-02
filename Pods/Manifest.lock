@@ -1,0 +1,20 @@
+PODS:
+  - Kingfisher (5.1.1)
+  - XCDYouTubeKit (2.12.0)
+
+DEPENDENCIES:
+  - Kingfisher (~> 5.1.0)
+  - XCDYouTubeKit
+
+SPEC REPOS:
+  trunk:
+    - Kingfisher
+    - XCDYouTubeKit
+
+SPEC CHECKSUMS:
+  Kingfisher: 2558186963e5be42d98c5b110ccb3130148b77e4
+  XCDYouTubeKit: cdad9e696f991aac2739c5b25586c81f1301ba30
+
+PODFILE CHECKSUM: c2d8427141891fdb20243586cf3261f0b9d19947
+
+COCOAPODS: 1.8.4
