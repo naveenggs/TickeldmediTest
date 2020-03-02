@@ -16,20 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
-    
-    func createSearch(storyboard: UIStoryboard?) -> UIViewController {
-        guard let movieListController = storyboard?.instantiateViewController(withIdentifier: "MoviesListViewController") as? MoviesListViewController else {
-            fatalError("Unable to instantiate a NewsController")
-        }
-        
-        let searchController = UISearchController(searchResultsController: movieListController)
-        searchController.searchResultsUpdater = movieListController
-        
-        let searchContainer = UISearchContainerViewController(searchController: searchController)
-        searchContainer.title = "Search"
-        return searchContainer
-    }
-    
 
 }
 

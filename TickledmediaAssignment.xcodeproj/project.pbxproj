@@ -24,6 +24,7 @@
 		1DA25908240B96FF00F434F3 /* MovieDBAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DA25907240B96FE00F434F3 /* MovieDBAPI.swift */; };
 		1DA2590A240B97CB00F434F3 /* MovieDBStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DA25909240B97CB00F434F3 /* MovieDBStore.swift */; };
 		1DA2590D240BA55300F434F3 /* MovieData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DA2590C240BA55300F434F3 /* MovieData.swift */; };
+		77AFC78B240D340B005F7903 /* SearchBarReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77AFC78A240D340B005F7903 /* SearchBarReusableView.swift */; };
 		F8708BE10A10DB1F71631945 /* Pods_TickledmediaAssignment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A2FD4E4E36CED32BAE67A77 /* Pods_TickledmediaAssignment.framework */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		1DA25909240B97CB00F434F3 /* MovieDBStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDBStore.swift; sourceTree = "<group>"; };
 		1DA2590C240BA55300F434F3 /* MovieData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieData.swift; sourceTree = "<group>"; };
 		77AFC784240D2251005F7903 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		77AFC78A240D340B005F7903 /* SearchBarReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarReusableView.swift; sourceTree = "<group>"; };
 		9006552C09F2794B4CA41ADA /* Pods-TickledmediaAssignment.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TickledmediaAssignment.debug.xcconfig"; path = "Target Support Files/Pods-TickledmediaAssignment/Pods-TickledmediaAssignment.debug.xcconfig"; sourceTree = "<group>"; };
 		9A2FD4E4E36CED32BAE67A77 /* Pods_TickledmediaAssignment.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TickledmediaAssignment.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -87,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				1D1D20E2240BC57200DC42D5 /* MovieCVCell.swift */,
+				77AFC78A240D340B005F7903 /* SearchBarReusableView.swift */,
 				1D1D20E3240BC57200DC42D5 /* MovieCVCell.xib */,
 			);
 			path = Cells;
@@ -307,6 +310,7 @@
 				1DA2590A240B97CB00F434F3 /* MovieDBStore.swift in Sources */,
 				1D1D20E8240BCCDC00DC42D5 /* ConnectivityHelper.swift in Sources */,
 				1D1D20DC240BC28A00DC42D5 /* MovieDetailViewController.swift in Sources */,
+				77AFC78B240D340B005F7903 /* SearchBarReusableView.swift in Sources */,
 				1DA258F3240B953100F434F3 /* AppDelegate.swift in Sources */,
 				1D1D20E4240BC57200DC42D5 /* MovieCVCell.swift in Sources */,
 				1DA258F5240B953100F434F3 /* SceneDelegate.swift in Sources */,
